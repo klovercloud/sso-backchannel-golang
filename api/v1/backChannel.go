@@ -59,7 +59,7 @@ func (c BackChannelInstance) Create(e echo.Context) error {
 		Timeout: time.Second * 10,
 	}
 
-	req, err := http.NewRequest(http.MethodPost, config.AuthorizeURI, strings.NewReader(encodedData))
+	req, err := http.NewRequest(http.MethodPost, config.AuthorizeURI+"/"+config.TOKEN, strings.NewReader(encodedData))
 	if err != nil {
 		return fmt.Errorf("Got error %s", err.Error())
 	}
@@ -84,7 +84,7 @@ func (c BackChannelInstance) Create(e echo.Context) error {
 }
 func (c BackChannelInstance) Get(e echo.Context) error {
 	infoDto := dto.FrontChannelInfoDto{
-		AuthorizeURI: config.AuthorizeURI,
+		AuthorizeURI: config.AuthorizeURI + "/" + config.AUTH,
 		RedirectURI:  config.RedirectURI,
 		ClientID:     config.ClientId,
 		Scope:        config.SCOPE_OPENID,
