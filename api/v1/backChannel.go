@@ -75,7 +75,7 @@ func (c BackChannelInstance) Create(e echo.Context) error {
 			log.Println("[ERROR] ", err.Error())
 		}
 	}(response.Body)
-	responseModel := model.AuthServerResponseModel{}
+	var responseModel interface{}
 	err = json.NewDecoder(response.Body).Decode(&responseModel)
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, err.Error())
