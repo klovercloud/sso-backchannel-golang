@@ -23,6 +23,11 @@ func New() *echo.Echo {
 		Format: "[${time_rfc3339}] method=${method}, uri=${uri}, status=${status}, latency=${latency_human}\n",
 	}))
 	echoInstance.Use(middleware.Recover())
+	echoInstance.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{"*"},
+		AllowHeaders: []string{"*"},
+	}))
 	return echoInstance
 }
 
