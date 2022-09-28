@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"backChannel/authorization"
 	"backChannel/config"
 	"backChannel/dto"
 	"backChannel/helper"
@@ -75,12 +76,16 @@ func (c BackChannelInstance) Create(e echo.Context) error {
 			log.Println("[ERROR] ", err.Error())
 		}
 	}(response.Body)
-	var responseModel interface{}
-	err = json.NewDecoder(response.Body).Decode(&responseModel)
+	var ResponseModel interface{}
+	err = json.NewDecoder(response.Body).Decode(&ResponseModel)
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return e.JSON(response.StatusCode, responseModel)
+	mappedJson := ResponseModel.(map[string]interface{})
+	if authorization.AuthorizeUser(mappedJson["access_token"].(string)) == false {
+		return e.JSON(http.StatusUnauthorized, "USER NOT AUTHORIZED AGAINST CLIENT")
+	}
+	return e.JSON(response.StatusCode, ResponseModel)
 }
 func (c BackChannelInstance) Get(e echo.Context) error {
 	infoDto := dto.FrontChannelInfoDto{
